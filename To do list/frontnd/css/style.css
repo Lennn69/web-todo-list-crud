@@ -1,0 +1,211 @@
+/* --- MODERN SYSTEM THEME OVERRIDES --- */
+* {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  text-shadow: none !important; 
+  box-sizing: border-box;
+}
+
+body, .ui-page {
+  background-color: #F8FAFC !important; 
+}
+
+/* --- POLISHED HEADER BAR --- */
+.ui-header {
+  background-color: #FFFFFF !important;
+  border: none !important;
+  border-bottom: 1px solid #E2E8F0 !important;
+  padding: 12px 4px !important;
+}
+.ui-header .ui-title {
+  font-size: 1.15rem !important;
+  font-weight: 700 !important;
+  color: #0F172A !important;
+  margin: 0 30px !important;
+}
+.ui-header .ui-btn {
+  background: #EFF6FF !important;
+  border: none !important;
+  color: #2563EB !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  padding: 8px 14px !important;
+  box-shadow: none !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  margin-top: 0 !important;
+}
+.ui-header .ui-btn:active {
+  background: #DBEAFE !important;
+}
+
+/* --- CONTAINER BODY CONTENT --- */
+.ui-content {
+  padding: 20px 16px !important;
+}
+
+/* --- CARD DESIGN --- */
+#todo-list {
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+.todo-card {
+  background: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 16px !important;
+  margin-bottom: 12px !important;
+  padding: 14px 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03) !important;
+  transition: background-color 0.25s ease, border-color 0.25s ease, opacity 0.25s ease;
+}
+.todo-card.is-completed {
+  background: #F8FAFC !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: none !important;
+  opacity: 0.65;
+}
+
+/* --- LAYOUT WRAPPERS --- */
+.todo-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important; 
+  flex-grow: 1;
+}
+
+.todo-actions {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important; 
+  flex-shrink: 0;
+}
+
+/* Custom Checkbox Design */
+.todo-left input[type="checkbox"] {
+  margin: 0 !important;
+  width: 22px !important;
+  height: 22px !important;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #FFFFFF;
+  border: 2px solid #CBD5E1;
+  border-radius: 7px;
+  display: inline-block;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.todo-left input[type="checkbox"]:checked {
+  background-color: #2563EB;
+  border-color: #2563EB;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+  background-size: 14px 14px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* Title text styles */
+.todo-title-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #1E293B;
+  transition: color 0.25s ease, text-decoration 0.25s ease;
+  line-height: 1.4;
+}
+.completed-text {
+  text-decoration: line-through !important;
+  color: #94A3B8 !important;
+}
+
+/* --- ACTION BUTTONS (EDIT & DELETE) --- */
+.edit-action-btn, .delete-action-btn {
+  border: none !important;
+  border-radius: 10px !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+}
+
+.edit-action-btn {
+  background: #EFF6FF !important;
+  color: #2563EB !important;
+}
+.edit-action-btn:active {
+  background: #DBEAFE !important;
+}
+
+.delete-action-btn {
+  background: #FEF2F2 !important;
+  color: #EF4444 !important;
+}
+.delete-action-btn:active {
+  background: #FEE2E2 !important;
+}
+
+/* --- FORMS & INPUT CONTROLS --- */
+.form-group {
+  margin-bottom: 20px;
+}
+.form-group label {
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  color: #64748B !important;
+  margin-bottom: 8px !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.ui-input-text {
+  background: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important;
+  border-radius: 12px !important;
+  padding: 6px 12px !important;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02) !important;
+}
+.ui-input-text.ui-focus {
+  border-color: #2563EB !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15) !important;
+}
+
+.submit-btn {
+  background: #2563EB !important;
+  border: none !important;
+  color: #FFFFFF !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  padding: 14px !important;
+  border-radius: 12px !important;
+  margin-top: 24px !important;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2) !important;
+}
+.submit-btn:active {
+  background: #1D4ED8 !important;
+}
+
+/* --- EMPTY STATE --- */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+}
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 12px;
+}
+.empty-state-text {
+  color: #64748B;
+  font-size: 0.95rem;
+  font-weight: 500;
+}

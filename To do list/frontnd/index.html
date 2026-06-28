@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Polished Todo App</title>
+  
+  <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div data-role="page" id="main-page">
+    <div data-role="header" data-position="fixed" data-tap-toggle="false">
+      <h1 id="main-page-title">Task Space</h1>
+      <a href="#add-page" id="open-add-btn" class="ui-btn-right" data-transition="slide">＋ Add Task</a>
+    </div>
+
+    <div role="main" class="ui-content">
+      <ul id="todo-list" data-role="none">
+        </ul>
+    </div>
+  </div>
+
+  <div data-role="page" id="add-page">
+    <div data-role="header" data-position="fixed" data-tap-toggle="false">
+      <a href="#main-page" id="close-form-btn" data-transition="slide" data-direction="reverse">✕ Close</a>
+      <h1 id="form-page-heading">New Task</h1>
+    </div>
+
+    <div role="main" class="ui-content">
+      <form id="add-todo-form">
+        <input type="hidden" id="edit-todo-id" value="">
+        
+        <div class="form-group">
+          <label for="todo-title" id="form-input-label">What are you working on?</label>
+          <input type="text" name="todo-title" id="todo-title" placeholder="e.g. Finish homework assignment" data-clear-btn="false" required>
+        </div>
+        
+        <button type="submit" id="form-submit-btn" class="submit-btn">Create Task</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000/api/todos';
+
+    $(document).on("pageinit", "#main-page", function() {
+      fetchTodos();
+
+      $("#open-add-btn").on("click", function() {
+        resetFormContext();
+      });
+
+      $("#close-form-btn").on("click", function() {
+        resetFormContext();
+      });
+
+      // Monitor completion status toggles separately
+      $(document).on("change", ".toggle-status", function() {
+        const id = $(this).data("id");
+        const completed = $(this).is(":checked");
+        updateTodo(id, { completed: completed });
+      });
+
+      // Edit Button Action: Put the values inside the add screen form layout contexts
+      $(document).on("click", ".edit-action-btn", function(e) {
+        e.preventDefault();
+        const id = $(this).data("id");
+        const currentTitle = $(this).data("title");
+
+        $("#edit-todo-id").val(id);
+        $("#todo-title").val(currentTitle);
+        
+        $("#form-page-heading").text("Edit Task");
+        $("#form-input-label").text("Update your task description");
+        $("#form-submit-btn").text("Save Changes");
+
+        $.mobile.changePage("#add-page", { transition: "slide" });
+      });
+
+      // Handle item removal clicks securely
+      $(document).on("click", ".delete-action-btn", function(e) {
+        e.preventDefault();
+        const id = $(this).data("id");
+        deleteTodo(id);
+      });
+    });
+
+    $(document).on("pageinit", "#add-page", function() {
+      $("#add-todo-form").on("submit", function(e) {
+        e.preventDefault();
+        const title = $("#todo-title").val();
+        const editId = $("#edit-todo-id").val();
+
+        if (editId) {
+          updateTodo(editId, { title: title.trim() }, true);
+        } else {
+          createTodo(title);
+        }
+      });
+    });
+
+    function resetFormContext() {
+      $("#edit-todo-id").val("");
+      $("#todo-title").val("");
+      $("#form-page-heading").text("New Task");
+      $("#form-input-label").text("What are you working on?");
+      $("#form-submit-btn").text("Create Task");
+    }
+
+    // --- API & UI Pipeline Functions ---
+
+    function fetchTodos() {
+      $.ajax({
+        url: API_URL,
+        method: 'GET',
+        dataType: 'json',
+        success: function(todos) {
+          const $list = $("#todo-list");
+          $list.empty();
+
+          if(todos.length === 0) {
+            $list.append(`
+              <div class="empty-state">
+                <div class="empty-state-icon">🎯</div>
+                <div class="empty-state-text">Everything's done. Add a new task to start fresh!</div>
+              </div>
+            `);
+          } else {
+            todos.forEach(function(todo) {
+              const checkedAttr = todo.completed ? 'checked' : '';
+              const textClass = todo.completed ? 'completed-text' : '';
+              const cardClass = todo.completed ? 'todo-card is-completed' : 'todo-card';
+
+              const itemHtml = `
+                <li class="${cardClass}">
+                  <div class="todo-left">
+                    <input type="checkbox" class="toggle-status" data-role="none" data-id="${todo.id}" ${checkedAttr} id="check-${todo.id}">
+                    <span class="todo-title-text ${textClass}">${todo.title}</span>
+                  </div>
+                  <div class="todo-actions">
+                    <button type="button" class="edit-action-btn" data-id="${todo.id}" data-title="${todo.title}">✎</button>
+                    <button type="button" class="delete-action-btn" data-id="${todo.id}">✕</button>
+                  </div>
+                </li>
+              `;
+              $list.append(itemHtml);
+            });
+          }
+        },
+        error: function() {
+          alert('Failed to connect to backend server API.');
+        }
+      });
+    }
+
+    function createTodo(title) {
+      $.ajax({
+        url: API_URL,
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ title: title }),
+        success: function() {
+          resetFormContext();
+          fetchTodos();
+          $.mobile.changePage("#main-page", { transition: "slide", reverse: true });
+        }
+      });
+    }
+
+    function updateTodo(id, payload, shouldRedirect = false) {
+      $.ajax({
+        url: `${API_URL}/${id}`,
+        method: 'PUT',
+        contentType: 'application/json',
+        data: JSON.stringify(payload), 
+        success: function() {
+          fetchTodos(); 
+          if (shouldRedirect) {
+            resetFormContext();
+            $.mobile.changePage("#main-page", { transition: "slide", reverse: true });
+          }
+        },
+        error: function() {
+          fetchTodos(); 
+        }
+      });
+    }
+
+    function deleteTodo(id) {
+      $.ajax({
+        url: `${API_URL}/${id}`,
+        method: 'DELETE',
+        success: function() {
+          fetchTodos();
+        }
+      });
+    }
+  </script>
+</body>
+</html>
